@@ -1,0 +1,122 @@
+{% extends 'base/base_main.html' %}
+{% load static %}
+
+{% block css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'axf/market/css/market.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div id="market">
+        <aside>
+            <ul>
+                {% for i in types %}
+                    <li>
+                        <a href="{% url 'app:market_with_params' i.typeid '0' '0' %}">{{ i.typename }}</a>
+                        {% ifequal i.typeid  current_id %}
+                            <span class="yellowSlide"></span>
+                        {% endifequal %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </aside>
+
+        <section>
+            <nav>
+                <ul>
+                    <li>
+                        <span id="all_cate">
+                            全部类型
+                            <span class="glyphicon glyphicon-chevron-down"></span>
+                        </span>
+                    </li>
+                    <li>
+                        <span id="all_sort">
+                            综合排序
+                            <span class="glyphicon glyphicon-chevron-down"></span>
+                        </span>
+                    </li>
+                </ul>
+            </nav>
+
+            <menu>
+                <ul>
+                    {% for i in goods %}
+                        <li>
+                            <a href="">
+                                <img src="{{ i.productimg }}" alt="">
+                                <div class="shoppingInfo">
+                                    <h6>{{ i.productlongname }}</h6>
+                                    <div class="detailTag">
+                                        <span>精选</span>
+                                        <span></span>
+                                    </div>
+                                    <p class="unit">
+                                        {{ i.specifics }}
+                                    </p>
+                                    <p class="price">
+                                        <span>￥{{ i.price }}</span>
+                                        <s>￥{{ i.marketprice }}</s>
+                                    </p>
+                                </div>
+                            </a>
+
+                            <section>
+                                <button class="subShopping" g_id = '{{ i.id }}'>-</button>
+                                <span>{{ i.num }}</span>
+                                <button class="addShopping" g_id = '{{ i.id }}'>+</button>
+                            </section>
+                        </li>
+                    {% endfor %}
+                </ul>
+
+                {#            全部分类的遮罩层#}
+                <div id="cates">
+                    <div>
+                        {% for i in sub_types %}
+                            <a href="{% url 'app:market_with_params' current_id i.1 0 %}">
+                                {% if i.1 == current_sub_type_id %}
+                                    <button class="btn-danger btn-success">{{ i.0 }}</button>
+                                {% else %}
+                                    <button>{{ i.0 }}</button>
+                                {% endif %}
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+                {#            排序的遮罩层#}
+                <div id="sorts">
+                    <div>
+                        <a href="{% url 'app:market_with_params' current_id current_sub_type_id 0 %}">
+                            {% if order_type == 0 %}
+                                <button class="btn-danger btn-success">全部类型</button>
+                            {% else %}
+                                <button>全部类型</button>
+                            {% endif %}
+                        </a>
+                        <a href="{% url 'app:market_with_params' current_id current_sub_type_id 1 %}">
+                             {% if order_type == 1 %}
+                                <button class="btn-danger btn-success">价格最低</button>
+                            {% else %}
+                                <button>价格最低</button>
+                            {% endif %}
+                        </a>
+                        <a href="{% url 'app:market_with_params' current_id current_sub_type_id 2 %}">
+                             {% if order_type == 2 %}
+                                <button class="btn-danger btn-success">销量最高</button>
+                            {% else %}
+                                <button>销量最高</button>
+                            {% endif %}
+                        </a>
+                    </div>
+                </div>
+            </menu>
+        </section>
+    </div>
+{% endblock %}
+
+
+{% block js %}
+    {{ block.super }}
+    <script type="text/javascript" src="{% static 'axf/market/js/market.js' %}"></script>
+{% endblock %}
